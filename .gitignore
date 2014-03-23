@@ -2,5 +2,6 @@ out/
 target/
 logs/
 .lein-repl-history
+.lein-failures
 *.swp
 .nrepl-port
