@@ -3,18 +3,19 @@
               [io.pedestal.app.messages :as msg]
               [io.pedestal.app :as app]))
 
-;(defn set-value-transform [old-value message]
-;  (:value message))
-;
 (defn inc-transform [old-value _]
   ((fnil inc 0) old-value))
 
 (defn init-main [_]
   [[:transform-enable [:main :my-counter] :inc [{msg/topic [:my-counter]}]]])
 
+(def swap-transform [_ message]
+  (:value message))
+
 (def example-app
   {:version 2
-   :transform [[:inc [:my-counter] inc-transform]]
+   :transform [[:inc  [:my-counter] inc-transform]
+               [:swap [:**]         swap-transform]]
    :emit [{:init init-main}
-          [#{[:*]} (app/default-emitter [:main])]]})
+          [#{[:my-counter] [:other-counters :*]} (app/default-emitter [:main])]]})
 
